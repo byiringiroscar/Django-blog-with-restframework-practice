@@ -1,0 +1,102 @@
+{% extends 'html/base.html' %}
+
+
+{% block content %}
+{% load static %}
+
+
+
+{% load crispy_forms_tags %}
+
+<div class="row">
+
+    <div class="col">
+          <div class="card" style="width: 18rem;">
+  <img src="{{ informa.player_image.url }}" class="card-img-top" alt="...">
+  <div class="card-body">
+      <p class="card-text">Name:{{informa.name}}</p>
+                <p class="card-text">Position:{{informa.position}}</p>
+                <p class="card-text">Current Club:{{informa.team}}</p>
+                <p class="card-text">Country:{{informa.country}}</p>
+                <p class="card-text">Goals:{{informa.goals}}</p>
+                <p class="card-text">Assists:{{informa.assists}}</p>
+                <p class="card-text">posted by:{{informa.posted}}</p>
+
+      <div class="btn-group">
+
+
+
+          {% if request.user.is_authenticated %}
+          {% if informa.posted == request.user %}
+          <button type="button" class="btn btn-sm btn-outline-primary" ><a href="{% url 'edit_post' informa.id %}">Edit</a> </button>
+          <button type="button" class="btn btn-sm btn-outline-primary" ><a href="{% url 'podelete' informa.id %}">Delete</a> </button>
+          {% endif %}
+          {% endif %}
+
+                </div>
+
+
+  </div>
+</div>
+
+    </div>
+    <div class="col-8 mr-5">
+        <div class="card bg-dark text-white">
+  <img class="card-img" src="{% static 'image/foot.svg' %}" alt="Card image" style="height:80px; width: 80px;">
+  <div class="card-img">
+    <h5 class="card-title">{{informa.name}} information</h5>
+    <p class="card-text">{{informa.description}}</p>
+
+  </div>
+            <div>
+                <h3 class="pb-2 mt-4">Put your comment</h3>
+                <form action="" method="POST">{% csrf_token %}
+
+
+                    {{form|crispy}}
+
+                <input type="submit" value="submit" class="btn btn-primary my-2">
+
+                </form>
+                <div>
+                    {% if messages %}
+                      <ul class="messages">
+                        {% for message in messages %}
+                          <li class="{{ message.tags }}">{{ message }}</li>
+                        {% endfor %}
+                      </ul>
+                    {% endif %}
+                </div>
+
+            </div>
+
+</div>
+    </div>
+
+</div>
+<div class="text-white">
+       <h4>Comments...</h4>
+      {% if not comments %}
+            No Comments yet....<a href="#">
+            Add one
+
+            </a>
+      {% else %}
+            {% for data in comments %}
+                    <strong>
+                        {{data.name}} -
+                        {{ data.date_added }}
+                    </strong>
+                    <br/>
+                    {{data.body}}
+            {% endfor %}
+
+
+      {% endif %}
+
+</div>
+
+
+
+
+{% endblock %}
